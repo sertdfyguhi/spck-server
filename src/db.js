@@ -26,7 +26,7 @@ class Database {
     writeFileSync(this._path, data)
   }
 
-  set_key(key, value) {
+  set(key, value) {
     if (key.split('/').length > 1) {
       let split = key.split('/')
       let node = this._json
@@ -43,7 +43,7 @@ class Database {
     this._write()
   }
 
-  get_key(key) {
+  get(key) {
     if (key.split('/').length > 1) {
       let node = this._json
       for (const k of key.split('/')) {
@@ -57,7 +57,7 @@ class Database {
     }
   }
 
-  delete_key(key) {
+  delete(key) {
     if (key.split('/').length > 1) {
       let code = 'delete this._json'
       for (const k of key.split('/')) {

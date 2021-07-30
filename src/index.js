@@ -19,15 +19,15 @@ const rate_limiter = new rate_limit({
   message: { message: 'You have been rate limited. Maximum 2 requests per day.' }
 })
 app.use('/api/publish', rate_limiter)
-// db.set_key('users', {})
-// db.set_key('packages', {})
+// db.set('users', {})
+// db.set('packages', {})
 db.log()
 
 app.use(express.json())
 
 app.get('/api/package/:pkg', (req, res) => {
-  if (req.params.pkg in db.get_key('packages')) {
-    let data = db.get_key(`packages/${req.params.pkg}`)
+  if (req.params.pkg in db.get('packages')) {
+    let data = db.get(`packages/${req.params.pkg}`)
     delete data.token
     res.status(200).send(data)
   } else {
@@ -38,7 +38,7 @@ app.get('/api/package/:pkg', (req, res) => {
 app.get('/api/search', (req, res) => {
   const query = req.query.q
   if (query) {
-    const packages = Object.keys(db.get_key('packages'))
+    const packages = Object.keys(db.get('packages'))
     if (packages.length == 0) {
       res.status(404).send({ message: 'No packages found.' })
       return } 
@@ -51,7 +51,7 @@ app.get('/api/search', (req, res) => {
       return a.rating + b.rating
     }).filter(rating => rating.rating > 0.6)
       .map(rating => {
-        let resp = db.get_key(`packages/${rating.target}`)
+        let resp = db.get(`packages/${rating.target}`)
         return { name: resp.name, 
           version: resp.versions[resp.versions.length - 1],
           author: resp.author } })
@@ -62,9 +62,9 @@ app.get('/api/search', (req, res) => {
 })
 
 app.post('/api/publish', (req, res) => {
-  if (req.body.token == (db.get_key(`packages/${req.body.name}/token`) || req.body.token)) {
+  if (req.body.token == (db.get(`packages/${req.body.name}/token`) || req.body.token)) {
     if (
-        !(db.get_key(`packages/${req.body.name}/versions`) || []).includes(req.body.version)
+        !(db.get(`packages/${req.body.name}/versions`) || []).includes(req.body.version)
       ) {
       const name = req.body.name,
         desc = req.body.desc,
@@ -76,7 +76,8 @@ app.post('/api/publish', (req, res) => {
         
       let comb = {
           name, desc, long_desc, homepage, token,
-          versions: (db.get_key(`packages/${name}/versions`) || []).concat(version) };
+          id: Object.keys(db.get('packages')).length + 1,
+          versions: (db.get(`packages/${name}/versions`) || []).concat(version) };
 
       if (forbidden_pkg_names.includes(name)) {
         res.status(403).send({ message: 'Package name is forbidden to use.' })
@@ -84,7 +85,7 @@ app.post('/api/publish', (req, res) => {
 
       try {
         const user = sp(auth.get_user)(token, process.env.KEY).payload.user
-        if (user in db.get_key('users')) {
+        if (user in db.get('users')) {
           comb['author'] = user
         } else {
           throw ''
@@ -112,13 +113,13 @@ app.post('/api/publish', (req, res) => {
         fs.mkdirSync(`${__dirname}/packages/${name}`)
 
       if (
-        comb.author != (db.get_key(`packages/${name}/author`) || comb.author)
+        comb.author != (db.get(`packages/${name}/author`) || comb.author)
       ) {
         res.status(409).send({ message: 'Author cannot be changed.' })
         return
       }
 
-      db.set_key(`packages/${name}`, comb)
+      db.set(`packages/${name}`, comb)
 
       make_pkg(data, name, version)
 
@@ -134,8 +135,8 @@ app.post('/api/publish', (req, res) => {
 app.get('/api/package/:pkg/download', (req, res) => {
   const name = req.params.pkg.split('-')[0]
   
-  if (name in db.get_key('packages')) {
-    const versions = db.get_key(`packages/${name}/versions`)
+  if (name in db.get('packages')) {
+    const versions = db.get(`packages/${name}/versions`)
     const ver = req.params.pkg.split('-')[1] || versions[versions.length - 1]
 
     if (!versions.includes(ver)) {
@@ -156,7 +157,7 @@ app.post('/api/users/register', (req, res) => {
   const pass = req.body.pass
 
   if (user && pass) {
-    if (user in db.get_key('users')) {
+    if (user in db.get('users')) {
       res.status(409).send({ message: 'User already exists.' })
       return }
 
@@ -176,7 +177,7 @@ app.post('/api/users/register', (req, res) => {
     
     auth.hash_pass(pass)
       .then(hash => {
-        db.set_key(`users/${user}`, { pass: hash })
+        db.set(`users/${user}`, { pass: hash })
       })
     
     auth.create_token(user, process.env.KEY)
@@ -193,7 +194,7 @@ app.post('/api/users/login', (req, res) => {
   const pass = req.body.pass
 
   if (user && pass) {
-    if (user in db.get_key('users')) {
+    if (user in db.get('users')) {
       auth.check_pass(user, pass, users)
         .then(check_pass => {
           if (check_pass) {
