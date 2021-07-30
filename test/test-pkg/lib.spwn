@@ -1,0 +1,7 @@
+print = (value: @string) {
+  $.print(value)
+}
+
+return {
+  print
+}
