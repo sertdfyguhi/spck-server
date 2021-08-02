@@ -3,25 +3,25 @@ const fs = require('fs')
 const sp = require('synchronized-promise')
 const ss = require('string-similarity')
 const rate_limit = require('express-rate-limit')
-const { make_pkg } = require('./pkg.js')
+const { make_tar, delete_pkg } = require('./pkg.js')
 const Database = require('./db.js')
 const auth = require('./auth.js')
 
 const app = express()
-const db = new Database('src/db.txt', true, process.env.KEY)
+const db = new Database('src/db.txt', true, process.env.KEY, { packages: {}, users: {} })
 const PORT = 5000
 const allowed_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_'
 const allow_chars_usr = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_'
 const forbidden_pkg_names = ['std', 'gamescene']
 const rate_limiter = new rate_limit({
   windowMs: 60000 * 60 * 24,
-  max: 2,
-  message: { message: 'You have been rate limited. Maximum 2 requests per day.' }
+  max: 10,
+  message: { message: 'You have been rate limited. Maximum 10 requests per day.' }
 })
+
 app.use('/api/publish', rate_limiter)
-// db.set('users', {})
-// db.set('packages', {})
 db.log()
+console.log(db.get('packages/test/versions'))
 
 app.use(express.json())
 
@@ -30,6 +30,38 @@ app.get('/api/package/:pkg', (req, res) => {
     let data = db.get(`packages/${req.params.pkg}`)
     delete data.token
     res.status(200).send(data)
+  } else {
+    res.status(404).send({ message: 'Package not found.' })
+  }
+})
+
+app.delete('/api/package/:pkg', (req, res) => {
+  const name = req.params.pkg.split('-')[0]
+  const ver = req.params.pkg.split('-')[1]
+
+  if (name in db.get('packages')) {
+    const resp = delete_pkg(name, ver, db)
+    res.status(resp[1]).send(resp[0])
+  } else {
+    res.status(404).send({ message: 'Package not found.' })
+  }
+})
+
+app.get('/api/package/:pkg/download', (req, res) => {
+  const name = req.params.pkg.split('-')[0]
+  
+  if (name in db.get('packages')) {
+    const versions = db.get(`packages/${name}/versions`)
+    const ver = req.params.pkg.split('-')[1] || versions[versions.length - 1]
+
+    if (!versions.includes(ver)) {
+      res.status(404).send({ message: 'Version not found.' })
+      return
+    }
+
+    res.status(200).download(
+      `${__dirname}/packages/${name}/${ver}.tar`, `${name}-${ver}.tar`
+    )
   } else {
     res.status(404).send({ message: 'Package not found.' })
   }
@@ -104,7 +136,7 @@ app.post('/api/publish', (req, res) => {
         return
       }
 
-      if (!version.split('').every(c => '0123456789.'.includes(c))) {
+      if (!/\d.\d.\d/.test(version)) {
         res.status(422).send({ message: 'Package version is invalid.' })
         return
       }
@@ -121,7 +153,11 @@ app.post('/api/publish', (req, res) => {
 
       db.set(`packages/${name}`, comb)
 
-      make_pkg(data, name, version)
+      const resp = make_tar(data, name, version)
+      if (resp) {
+        res.status(400).send(resp)
+        return
+      }
 
       res.status(200).send({ message: 'Published successfully!' })
     } else {
@@ -129,26 +165,6 @@ app.post('/api/publish', (req, res) => {
     }
   } else {
     res.status(403).send({ message: 'You cannot update this package.' })
-  }
-})
-
-app.get('/api/package/:pkg/download', (req, res) => {
-  const name = req.params.pkg.split('-')[0]
-  
-  if (name in db.get('packages')) {
-    const versions = db.get(`packages/${name}/versions`)
-    const ver = req.params.pkg.split('-')[1] || versions[versions.length - 1]
-
-    if (!versions.includes(ver)) {
-      res.status(404).send({ message: 'Version not found.' })
-      return
-    }
-
-    res.status(200).download(
-      `${__dirname}/packages/${name}/${ver}.tar`, `${name}-${ver}.tar`
-    )
-  } else {
-    res.status(404).send({ message: 'Package not found.' })
   }
 })
 

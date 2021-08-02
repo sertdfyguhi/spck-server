@@ -2,7 +2,7 @@ const { readFileSync, writeFileSync } = require('fs')
 const { encrypt, decrypt } = require('aes256')
 
 class Database {
-  constructor(path, enc = false, key = null) {
+  constructor(path, enc = false, key = null, if_err = {}) {
     let json = readFileSync(path).toString()
     try {
       if (enc) json = decrypt(key, json)
@@ -15,7 +15,7 @@ class Database {
     try {
       this._json = JSON.parse(json)
     } catch(e) {
-      this.clear()
+      this._json = if_err
     }
   }
 
@@ -47,7 +47,7 @@ class Database {
     if (key.split('/').length > 1) {
       let node = this._json
       for (const k of key.split('/')) {
-        if (!node) return undefined
+        if (!node) return
         node = node[k]
       }
 
@@ -59,15 +59,15 @@ class Database {
 
   delete(key) {
     if (key.split('/').length > 1) {
-      let code = 'delete this._json'
-      for (const k of key.split('/')) {
-        // Potentially dangerous code
-        if (!eval(code.split(' ')[1])) return undefined
-        code += `['${k}']`
+      const split = key.split('/')
+      let node = this._json
+      for (const k of split.slice(0, split.length - 1)) {
+        if (!node) return
+        node = node[k]
       }
-
-      // Potentially dangerous code
-      eval(code)
+      
+      if (!node[split[split.length - 1]]) return
+      delete node[split[split.length - 1]]
     } else {
       delete this._json[key]
     }
