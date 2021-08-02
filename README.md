@@ -11,6 +11,6 @@ Api docs is located in [DOCS.md](https://github.com/sertdfyguhi/pckp/blob/master
 - [ ] change database to use something other than txt fil
 - [ ] make a frontend
 - [ ] buy a domain and use it to host the api and frontend
-- [ ] way to delete accounts and packages
+- [x] way to delete accounts and packages
 - [x] api docs
 - [x] add accounts

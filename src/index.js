@@ -167,7 +167,7 @@ app.post('/api/publish', (req, res) => {
   }
 })
 
-app.post('/api/users/register', (req, res) => {
+app.post('/api/register', (req, res) => {
   const user = req.body.user
   const pass = req.body.pass
 
@@ -189,10 +189,15 @@ app.post('/api/users/register', (req, res) => {
     if (!pass.split('').every(c => allowed_chars.includes(c))) {
       res.status(403).send({ message: 'Password must only include the alphabet, digits and _.' })
       return }
+
+    let json = {
+      id: Object.keys(db.get('users')).length + 1
+    }
     
     auth.hash_pass(pass)
       .then(hash => {
-        db.set(`users/${user}`, { pass: hash })
+        json.pass = hash
+        db.set(`users/${user}`, json)
       })
     
     auth.create_token(user, process.env.KEY)
@@ -200,11 +205,11 @@ app.post('/api/users/register', (req, res) => {
         res.status(200).send({ message: 'User registered successfully!', token: jwt })
       })
   } else {
-    res.status(422).send({ message: 'User or password is not provided.' })
+    res.status(422).send({ message: 'Username or password is not provided.' })
   }
 })
 
-app.post('/api/users/login', (req, res) => {
+app.post('/api/login', (req, res) => {
   const user = req.body.user
   const pass = req.body.pass
 
@@ -230,3 +235,25 @@ app.post('/api/users/login', (req, res) => {
 })
 
 app.listen(PORT, console.log(`Listening on port ${PORT}`))
+
+app.get('/api/users/:user', (req, res) => {
+  const user = req.params.user
+
+  let data = db.get(`users/${user}`)
+  if (data) {
+    delete data.pass
+    res.status(200).send(data)
+  } else {
+    res.status(404).send({ message: 'User not found.' })
+  }
+})
+
+app.delete('/api/users/:user', (req, res) => {
+  const user = req.params.user
+
+  if (user in db.get('users')) {
+    db.delete(`users/${user}`)
+  } else {
+    res.status(404).send({ message: 'User not found.' })
+  }
+})
