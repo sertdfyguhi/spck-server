@@ -21,7 +21,6 @@ const rate_limiter = new rate_limit({
 
 app.use('/api/publish', rate_limiter)
 db.log()
-console.log(db.get('packages/test/versions'))
 
 app.use(express.json())
 

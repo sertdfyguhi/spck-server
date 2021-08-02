@@ -2,7 +2,7 @@ const { readFileSync, writeFileSync } = require('fs')
 const { encrypt, decrypt } = require('aes256')
 
 class Database {
-  constructor(path, enc = false, key = null, if_err = {}) {
+  constructor(path, enc = false, key = null, defaults = {}) {
     let json = readFileSync(path).toString()
     try {
       if (enc) json = decrypt(key, json)
@@ -15,7 +15,7 @@ class Database {
     try {
       this._json = JSON.parse(json)
     } catch(e) {
-      this._json = if_err
+      this._json = defaults
     }
   }
 
