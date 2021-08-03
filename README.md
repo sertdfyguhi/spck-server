@@ -3,7 +3,7 @@ Server for pckp, a package manager for [SPWN](https://github.com/Spu7Nix/SPWN-la
 Currently in development.
 
 # Api docs
-Api docs is located in [DOCS.md](https://github.com/sertdfyguhi/pckp/blob/master/DOCS.md).
+Api docs is located in [DOCS.md](https://github.com/sertdfyguhi/pckp-server/blob/master/DOCS.md).
 
 # Todo
 - [x] add dependencies for packages
