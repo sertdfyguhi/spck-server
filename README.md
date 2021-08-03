@@ -8,7 +8,7 @@ Api docs is located in [DOCS.md](https://github.com/sertdfyguhi/pckp/blob/master
 # Todo
 - [x] add dependencies for packages
 - [x] add rate limiting system
-- [ ] change database to use something other than txt fil
+- [ ] change database to use something other than txt file
 - [ ] make a frontend
 - [ ] buy a domain and use it to host the api and frontend
 - [x] way to delete accounts and packages
