@@ -234,8 +234,6 @@ app.post('/api/login', (req, res) => {
   }
 })
 
-app.listen(PORT, console.log(`Listening on port ${PORT}`))
-
 app.get('/api/users/:user', (req, res) => {
   const user = req.params.user
 
@@ -257,3 +255,5 @@ app.delete('/api/users/:user', (req, res) => {
     res.status(404).send({ message: 'User not found.' })
   }
 })
+
+app.listen(PORT, console.log(`Listening on port ${PORT}`))
