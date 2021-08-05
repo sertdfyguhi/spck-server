@@ -20,9 +20,8 @@ const rate_limiter = new rate_limit({
 })
 
 app.use('/api/publish', rate_limiter)
-db.log()
-
 app.use(express.json())
+db.log()
 
 app.get('/api/package/:pkg', (req, res) => {
   if (req.params.pkg in db.get('packages')) {
@@ -194,7 +193,7 @@ app.post('/api/register', (req, res) => {
       id: Object.keys(db.get('users')).length + 1
     }
     
-    auth.hash_pass(pass)
+    auth.hash(pass)
       .then(hash => {
         json.pass = hash
         db.set(`users/${user}`, json)
@@ -215,9 +214,9 @@ app.post('/api/login', (req, res) => {
 
   if (user && pass) {
     if (user in db.get('users')) {
-      auth.check_pass(user, pass, users)
-        .then(check_pass => {
-          if (check_pass) {
+      auth.check(pass, db.get(`users/${user}/pass`))
+        .then(correct => {
+          if (correct) {
             auth.create_token(user, process.env.KEY)
               .then(jwt => {
                 res.status(200).send({ message: 'Login successful.', token: jwt })

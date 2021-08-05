@@ -1,7 +1,7 @@
 const { SignJWT } = require('jose/jwt/sign')
 const { jwtVerify } = require('jose/jwt/verify')
 const { createSecretKey } = require('crypto')
-const argon2 = require('argon2-browser')
+const bcrypt = require('bcrypt')
 
 function create_token(user, key) {
   const jwt = new SignJWT({ user: user })
@@ -15,23 +15,20 @@ function get_user(token, key) {
   return jwtVerify(token, createSecretKey(key))
 }
 
-function check_pass(user, pass, db) {
-  return hash_pass(pass)
-    .then(res => {
-      return res == db.get_key(`users/${user}/pass`)
-    })
+function check(sent_pass, pass) {
+  return bcrypt.compare(sent_pass, pass)
 }
 
-function hash_pass(pass) {
-  return argon2.hash({ pass: pass, salt: process.env.KEY })
-    .then(res => {
-      return res.hashHex
+function hash(pass) {
+  return bcrypt.hash(pass, 13)
+    .then(enc => {
+      return enc
     })
 }
 
 module.exports = {
   get_user,
   create_token,
-  check_pass,
-  hash_pass
+  check,
+  hash
 }
