@@ -3,7 +3,7 @@ const ss = require('string-similarity')
 function search(q, db) {
   const packages = Object.keys(db.get('packages'))
   const best_match = ss.findBestMatch(
-    q, 
+    q || '', 
     packages
   )
 

@@ -5,7 +5,9 @@
     <% if (!login) { %>
       <li><a href="/register">register</a></li>
       <li><a href="/login">login</a></li>
-    <% } %>
+    <% } else { %>
+      <li><a href="/logout">logout</a></li>
+    <% } %> 
 
     <li>
       <input type="text" class="search" id="search-bar-1" placeholder="Search packages">

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300&display=swap');
+
 .search-btn {
   border: none;
   background-color: rgb(66, 66, 66);
@@ -23,13 +25,14 @@
 }
 
 .stats-list {
+  font-family: 'Source Sans Pro';
   margin: 0%;
-  padding: 0%;
+  padding: 8px;
   list-style-type: none;
   text-align: center;
 }
 
 .stats-list li {
   display: inline-block;
-  padding: 13px;
+  padding: 22px;
 }
