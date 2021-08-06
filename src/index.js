@@ -1,11 +1,11 @@
 const express = require('express')
 const fs = require('fs')
 const sp = require('synchronized-promise')
-const ss = require('string-similarity')
 const rate_limit = require('express-rate-limit')
 const { make_tar, delete_pkg } = require('./pkg.js')
 const Database = require('./db.js')
 const auth = require('./auth.js')
+const helpers = require('./helpers.js')
 
 const app = express()
 const db = new Database('src/db.txt', true, process.env.KEY, { packages: {}, users: {} })
@@ -20,8 +20,28 @@ const rate_limiter = new rate_limit({
 })
 
 app.use('/api/publish', rate_limiter)
+app.use(express.static('src/public'))
 app.use(express.json())
+
+app.set('view engine', 'ejs')
+app.set('views', 'src/views')
+
 db.log()
+
+app.get('/', (req, res) => {
+  res.render('index', { stats: helpers.stats(db) })
+})
+
+app.get('/navbar', (req, res) => {
+  res.render('navbar', { login: 'token' in (req.cookies || {}) })
+})
+
+app.get('/search', (req, res) => {
+  res.render('search', {
+    packages: helpers.search(req.query.q, db),
+    query: req.query.q
+  })
+})
 
 app.get('/api/package/:pkg', (req, res) => {
   if (req.params.pkg in db.get('packages')) {
@@ -57,6 +77,10 @@ app.get('/api/package/:pkg/download', (req, res) => {
       return
     }
 
+    db.set(
+      `packages/${name}/downloads`,
+      (db.get(`packages/${name}/downloads`) || 0) + 1)
+
     res.status(200).download(
       `${__dirname}/packages/${name}/${ver}.tar`, `${name}-${ver}.tar`
     )
@@ -65,26 +89,14 @@ app.get('/api/package/:pkg/download', (req, res) => {
   }
 })
 
+app.get('/api/stats', (req, res) => {
+  res.status(200).send(helpers.stats(db))
+})
+
 app.get('/api/search', (req, res) => {
   const query = req.query.q
   if (query) {
-    const packages = Object.keys(db.get('packages'))
-    if (packages.length == 0) {
-      res.status(404).send({ message: 'No packages found.' })
-      return } 
-
-    const best_match = ss.findBestMatch(
-      query, 
-      packages
-    )
-    const matches = best_match.ratings.sort((a, b) => {
-      return a.rating + b.rating
-    }).filter(rating => rating.rating > 0.6)
-      .map(rating => {
-        let resp = db.get(`packages/${rating.target}`)
-        return { name: resp.name, 
-          version: resp.versions[resp.versions.length - 1],
-          author: resp.author } })
+    const matches = helpers.search(query, db)
     res.status(200).send(matches)
   } else {
     res.status(422).send({ message: 'Search query not provided.' })
@@ -107,7 +119,8 @@ app.post('/api/publish', (req, res) => {
       let comb = {
           name, desc, long_desc, homepage, token,
           id: Object.keys(db.get('packages')).length + 1,
-          versions: (db.get(`packages/${name}/versions`) || []).concat(version) };
+          versions: (db.get(`packages/${name}/versions`) || []).concat(version),
+          downloads: (db.get(`packages/${name}/downloads`) || 0) };
 
       if (forbidden_pkg_names.includes(name)) {
         res.status(403).send({ message: 'Package name is forbidden to use.' })

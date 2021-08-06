@@ -1,5 +1,5 @@
 {
-  "name": "pckp-server",
+  "name": "spck-server",
   "version": "1.0.0",
   "description": "server for pckp",
   "main": "src/index.js",
@@ -21,6 +21,7 @@
     "aes256": "^1.1.0",
     "archiver": "^5.3.0",
     "bcrypt": "^5.0.1",
+    "ejs": "^3.1.6",
     "express": "^4.17.1",
     "express-rate-limit": "^5.3.0",
     "jose": "^3.14.3",

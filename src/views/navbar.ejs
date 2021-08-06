@@ -1,0 +1,14 @@
+<nav>
+  <ul>
+    <li style="float: left;"><a href="/"><h1>spck</h1></a></li>
+    
+    <% if (!login) { %>
+      <li><a href="/register">register</a></li>
+      <li><a href="/login">login</a></li>
+    <% } %>
+
+    <li>
+      <input type="text" class="search" id="search-bar-1" placeholder="Search packages">
+    </li>
+  </ul>
+</nav>

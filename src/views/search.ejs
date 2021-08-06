@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>searching for "<%= query %>"</title>
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/index.css">
+  <link rel="stylesheet" href="/css/search.css">
+  <link rel="stylesheet" href="/css/navbar.css">
+</head>
+<body>
+  <div id="navbar"></div>
+
+  <div class="search-container">
+    <h1>searching for "<%= query %>"</h1>
+    <input
+      type="text"
+      class="search-mod"
+      id="search-bar-2"
+      placeholder="Search packages"
+      style="font-size: 15px;"
+      value="<%= query %>">
+    <button class="search-btn" id="search">search</button>
+
+    <ul class="list">
+      <% if (packages.length > 0) { %>
+        <% packages.forEach(package => { %>
+          <li>
+            <div class="package">
+              <a href="/packages/<%= package.name %> " style="text-decoration: none;">
+                <h3><%= package.name %></h3>
+              </a>
+              <p class="info"><%= package.version %></p>
+              <hr>
+              <p class="desc"><%= package.desc %></p>
+            </div>
+          </li>
+        <% }) %>
+      <% } else { %>
+        <li style="color: rgb(255, 48, 48);">No packages found.</li>
+      <% } %> 
+    </ul>
+  </div>
+
+  <script src="js/index.js"></script>
+  <script src="js/navbar.js"></script>
+</body>
+</html>

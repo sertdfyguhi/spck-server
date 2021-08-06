@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>spck</title>
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/navbar.css">
+  <link rel="stylesheet" href="/css/index.css">
+</head>
+<body>
+  <div id="navbar"></div>
+
+  <div class="front center">
+    <div style="text-align: center;">
+      <h1>find packages for spwn</h1>
+      <input type="text" class="search" id="search-bar-2" placeholder="Search packages" style="font-size: 15px;">
+      <button class="search-btn" id="search-btn">search</button>
+    </div>
+  </div>
+
+  <div class="center">
+    <ul class="stats-list">
+      <% for( const stat in stats ) { %>
+        <li><h1><%= stats[stat] %><br><%= stat %></h1></li>
+      <% } %>
+    </ul>
+  </div>
+
+  <script src="js/index.js"></script>
+  <script src="js/navbar.js"></script>
+</body>
+</html>
