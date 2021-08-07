@@ -27,7 +27,7 @@ function delete_(req, res, db) {
   }
 }
 
-function download(req, res) {
+function download(req, res, db) {
   const name = req.params.pkg.split('-')[0]
   
   if (name in db.get('packages')) {
