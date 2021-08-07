@@ -1,6 +1,7 @@
 const express = require('express')
 const rate_limit = require('express-rate-limit')
 const Database = require('./db.js')
+const helpers = require('./helpers.js')
 const packages = require('./routes/packages.js')
 const users = require('./routes/users.js')
 
