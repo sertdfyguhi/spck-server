@@ -37,7 +37,6 @@ nav ul li a {
   color: white;
   padding-left: 5px;
   padding-right: 5px;
-  outline-width: 1px;
   transition: width 0.5s;
 }
 

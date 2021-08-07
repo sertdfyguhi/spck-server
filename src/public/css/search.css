@@ -18,7 +18,7 @@ hr {
   color: white;
 }
 
-.search-mod {
+.search-no-transition {
   width: 20em;
   border: none;
   border-radius: 3px;
@@ -27,8 +27,6 @@ hr {
   color: white;
   padding-left: 5px;
   padding-right: 5px;
-  outline-width: 1px;
-  transition: width 0.5s;
 }
 
 .list {
