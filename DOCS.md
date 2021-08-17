@@ -1,5 +1,5 @@
 # Api docs
-pckp's JSON api docs.
+spck's JSON api docs.
 
 ## GET `/api/package/<package>`
 Gets package info.
@@ -72,7 +72,7 @@ Publishes a new package.
 ### Example
 `/api/publish`
 
-## POST `/api/users/register`
+## POST `/api/register`
 Registers a new user.
 
 ### Fields in body
@@ -91,9 +91,9 @@ Registers a new user.
 ***type***: `string`
 
 ### Example
-`/api/users/register`
+`/api/register`
 
-## POST `/api/users/login`
+## POST `/api/login`
 Responds with a JWT token.
 
 ### Fields in body
@@ -111,7 +111,7 @@ Responds with a JWT token.
 ***type***: `string`
 
 ### Example
-`/api/users/login`
+`/api/login`
 
 ## GET `/api/search`
 Searches for packages.
@@ -122,6 +122,8 @@ Searches for packages.
 ### Response
 Array of similar packages.
 - name: Name of package.  
+***type***: `string`
+- desc: Description.  
 ***type***: `string`
 - version: Latest version of package.  
 ***type***: `string`
