@@ -1,5 +1,5 @@
-# Api docs
-spck's JSON api docs.
+# API docs
+spck's JSON API docs.
 
 ## GET `/api/package/<package>`
 Gets package info.
@@ -17,7 +17,7 @@ Gets package info.
 - long_desc: Long description.  
 ***type***: `string`
 
-- homepage: Homepage of the package.  
+- homepage: Homepage.  
 ***type***: `string`
 
 - versions: Versions available.  
@@ -30,10 +30,7 @@ Downloads the package in a .tar file.
 - package: Package name.
 
 ### Response
-Responds with a .tar file of the package.
-
-### Example
-`/api/package/test/download`
+Responds with a .tar file.
 
 ## POST `/api/publish`
 Publishes a new package.
@@ -53,13 +50,13 @@ Publishes a new package.
 ***type***: `string`  
 **example**: `1.0.0`
 
-- homepage: Homepage of package.  
+- homepage: Homepage.  
 ***type***: `string`
 
-- token*: Token of account.  
+- token: Token of account.  
 ***type***: `string`
 
-- data: Tar file encoded using base64.   
+- data: JSON of the directory.   
 ***type***: `string`
 
 ### Response
@@ -71,10 +68,10 @@ Registers a new user.
 
 ### Fields in body
 ##### \* required
-- user*: Username of account.  
+- user*: Username.  
 ***type***: `string`
 
-- pass*: Password of account.  
+- pass*: Password.  
 ***type***: `string`
 
 ### Response
@@ -89,10 +86,10 @@ Responds with a JWT token.
 
 ### Fields in body
 ##### \* required
-- user*: Username of account.  
+- user*: Username.  
 ***type***: `string`
 
-- pass*: Password of account.  
+- pass*: Password.  
 ***type***: `string`
 
 ### Response
@@ -109,11 +106,11 @@ Searches for packages.
 
 ### Response
 Array of similar packages.
-- name: Name of package.  
+- name: Package name.  
 ***type***: `string`
 - desc: Description.  
 ***type***: `string`
-- version: Latest version of package.  
+- version: Latest version.  
 ***type***: `string`
-- author: Author of the package.
+- author: Author.
 ***type***: `string`
