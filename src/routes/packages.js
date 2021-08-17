@@ -75,7 +75,7 @@ function publish(req, res, db) {
         data = req.body.data
         
       let comb = {
-          name, desc, long_desc, homepage, token,
+          name, desc, long_desc, homepage,
           id: Object.keys(db.get('packages')).length + 1,
           versions: (db.get(`packages/${name}/versions`) || []).concat(version),
           downloads: (db.get(`packages/${name}/downloads`) || 0) };

@@ -88,7 +88,7 @@ function register(req, res, db) {
         res.status(200).send({ message: 'User registered successfully!', token: jwt })
       })
   } else {
-    res.status(422).send({ message: 'Username or password is not provided.' })
+    res.status(422).send({ message: 'Username or password empty or not provided.' })
   }
 }
 

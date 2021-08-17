@@ -26,6 +26,11 @@ nav ul li h1 {
 nav ul li a {
   color: white;
   text-decoration-line: none;
+  transition: color 0.3s;
+}
+
+nav ul li a:hover {
+  color: rgb(190, 190, 190);
 }
 
 .search {

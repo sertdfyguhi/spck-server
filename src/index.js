@@ -1,5 +1,6 @@
 const express = require('express')
 const rate_limit = require('express-rate-limit')
+const cookie_parser = require('cookie-parser')
 const Database = require('./db.js')
 const helpers = require('./helpers.js')
 const packages = require('./routes/packages.js')
@@ -17,6 +18,7 @@ const rate_limiter = new rate_limit({
 app.use('/api/publish', rate_limiter)
 app.use(express.static('src/public'))
 app.use(express.json())
+app.use(cookie_parser())
 
 app.set('view engine', 'ejs')
 app.set('views', 'src/views')
@@ -38,15 +40,20 @@ app.get('/navbar', (req, res) => {
 })
 
 app.get('/search', (req, res) => {
+  const q = typeof req.query.q == 'string' ? req.query.q : req.query.q[0]
   res.render('search', {
-    packages: helpers.search(req.query.q, db),
-    query: req.query.q
+    packages: helpers.search(q, db),
+    query: q
   })
+})
+
+app.get('/register', (req, res) => {
+  res.sendFile(__dirname + '/public/register.html')
 })
 
 app.get('/logout', (req, res) => {
   if (req.cookies.token) {
-    res.cookie('token', '', { expires: new Date.now() })
+    res.cookie('token', '', { expires: new Date() })
   }
   res.redirect('/')
 })
@@ -67,10 +74,10 @@ app.get('/api/package/:pkg/download', handler(packages.download))
 
 app.post('/api/register', handler(users.register))
 
-app.post('/api/login', handler(packages.login))
+app.post('/api/login', handler(users.login))
 
-app.get('/api/users/:user', handler(packages.get))
+app.get('/api/users/:user', handler(users.get))
 
-app.delete('/api/users/:user', handler(packages.delete_))
+app.delete('/api/users/:user', handler(users.delete_))
 
 app.listen(PORT, console.log(`Listening on port ${PORT}`))
