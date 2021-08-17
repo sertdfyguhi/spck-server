@@ -23,9 +23,6 @@ Gets package info.
 - versions: Versions available.  
 ***type***: `array`
 
-### Example
-`/api/package/test`
-
 ## GET `/api/package/<package>/download`
 Downloads the package in a .tar file.
 
@@ -69,9 +66,6 @@ Publishes a new package.
 - message: Response message.  
 ***type***: `string`
 
-### Example
-`/api/publish`
-
 ## POST `/api/register`
 Registers a new user.
 
@@ -90,9 +84,6 @@ Registers a new user.
 - token: JWT token.  
 ***type***: `string`
 
-### Example
-`/api/register`
-
 ## POST `/api/login`
 Responds with a JWT token.
 
@@ -110,9 +101,6 @@ Responds with a JWT token.
 - token: JWT token.  
 ***type***: `string`
 
-### Example
-`/api/login`
-
 ## GET `/api/search`
 Searches for packages.
 
@@ -129,6 +117,3 @@ Array of similar packages.
 ***type***: `string`
 - author: Author of the package.
 ***type***: `string`
-
-### Example
-`/api/search?q=test`
