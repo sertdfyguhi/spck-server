@@ -24,24 +24,26 @@
       value="<%= query %>">
     <button class="search-btn" id="search-btn">search</button>
 
-    <ul class="list">
-      <% if (packages.length > 0) { %>
-        <% packages.forEach(package => { %>
-          <li>
-            <div class="package">
-              <a href="/packages/<%= package.name %>" style="text-decoration: none;">
-                <h3><%= package.name %></h3>
-              </a>
-              <p class="info"><%= package.version %></p>
-              <hr>
-              <p class="desc"><%= package.desc %></p>
-            </div>
-          </li>
-        <% }) %>
-      <% } else { %>
-        <li style="color: rgb(255, 48, 48);">No packages found.</li>
-      <% } %> 
-    </ul>
+    <div class="center-h">
+      <ul class="list">
+        <% if (packages.length > 0) { %>
+          <% packages.forEach(package => { %>
+            <li>
+              <div class="package">
+                <a href="/packages/<%= package.name %>" style="text-decoration: none;">
+                  <h3><%= package.name %></h3>
+                </a>
+                <p class="info"><%= package.version %></p>
+                <hr>
+                <p class="desc"><%= package.desc %></p>
+              </div>
+            </li>
+          <% }) %>
+        <% } else { %>
+          <li style="color: rgb(255, 48, 48);">No packages found.</li>
+        <% } %> 
+      </ul>
+    </divm>
   </div>
 
   <script src="/js/index.js"></script>
