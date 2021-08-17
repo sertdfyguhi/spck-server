@@ -2,6 +2,7 @@ const fs = require('fs')
 const sp = require('synchronized-promise')
 const { make_tar, delete_pkg } = require('../pkg.js')
 const helpers = require('../helpers.js')
+const auth = require('../auth.js')
 const allow_chars_usr = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_'
 const forbidden_pkg_names = ['std', 'gamescene']
 
@@ -110,8 +111,8 @@ function publish(req, res, db) {
         return
       }
 
-      if (!fs.existsSync(`${__dirname}/packages/${name}`))
-        fs.mkdirSync(`${__dirname}/packages/${name}`)
+      if (!fs.existsSync(`${__dirname}/../packages/${name}`))
+        fs.mkdirSync(`${__dirname}/../packages/${name}`)
 
       if (
         comb.author != (db.get(`packages/${name}/author`) || comb.author)
