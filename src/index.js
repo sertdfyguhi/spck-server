@@ -51,6 +51,10 @@ app.get('/register', (req, res) => {
   res.sendFile(__dirname + '/public/register.html')
 })
 
+app.get('/login', (req, res) => {
+  res.sendFile(__dirname + '/public/login.html')
+})
+
 app.get('/logout', (req, res) => {
   if (req.cookies.token) {
     res.cookie('token', '', { expires: new Date() })
