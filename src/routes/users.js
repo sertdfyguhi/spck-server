@@ -14,6 +14,7 @@ function get(req, res, db) {
   }
 }
 
+// WHAT THE FUCK
 function delete_(req, res, db) {
   const user = req.params.user
 
@@ -56,22 +57,30 @@ function register(req, res, db) {
 
   if (user && pass) {
     if (user in db.get('users')) {
-      res.status(409).send({ message: 'User already exists.' })
-      return }
+      return res.status(409).send({ message: 'User already exists.' })
+    }
 
     if (user.length < 1 || user.length > 25) {
-      res.status(403).send({ message: 'Username must be at least 1 characters and at most 25 characters.' })
-      return }
+      return res.status(403).send({
+        message: 'Username must be at least 1 characters and at most 25 characters.'
+      })
+    }
     if (!user.split('').every(c => allow_chars_usr.includes(c))) {
-      res.status(403).send({ message: 'Username must only include the alphabet and _.' })
-      return }
+      return res.status(403).send({
+        message: 'Username must only include the alphabet and _.'
+      })
+    }
 
     if (pass.length < 3 || pass.length > 30) {
-      res.status(403).send({ message: 'Password must be at least 3 characters and at most 30 characters.' })
-      return }
+      return res.status(403).send({
+        message: 'Password must be at least 3 characters and at most 30 characters.'
+      })
+    }
     if (!pass.split('').every(c => allowed_chars.includes(c))) {
-      res.status(403).send({ message: 'Password must only include the alphabet, digits and _.' })
-      return }
+      return res.status(403).send({
+        message: 'Password must only include the alphabet, digits and _.'
+      })
+    }
 
     let json = {
       id: Object.keys(db.get('users')).length + 1
@@ -88,7 +97,32 @@ function register(req, res, db) {
         res.status(200).send({ message: 'User registered successfully!', token: jwt })
       })
   } else {
-    res.status(422).send({ message: 'Username or password empty or not provided.' })
+    res.status(422).send({
+      message: 'Username or password is empty or not provided.'
+    })
+  }
+}
+
+function update(req, res, db) {
+  const user = req.params.user
+  const new_pass = req.body.new_pass
+  const old_pass = req.body.old_pass
+
+  if (!(user in db.get('users')))
+    return res.status(404).send({ message: 'User not found.' })
+
+  if (new_pass && old_pass) {
+    auth.check(old_pass, db.get(`users/${user}/pass`))
+      .then(async corr => {
+        if (corr) {
+          db.set(`users/${user}/pass`, await auth.hash(new_pass))
+          res.status(200).send({ message: 'Successfully changed passwords.' })
+        } else {
+          res.status(401).send({ message: 'Incorrect password.' })
+        }
+      })
+  } else {
+    return res.status(422).send({ message: 'Required arguments not provided.' })
   }
 }
 
@@ -96,5 +130,6 @@ module.exports = {
   get,
   delete_,
   login,
-  register
+  register,
+  update
 }

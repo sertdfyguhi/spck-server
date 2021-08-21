@@ -84,4 +84,6 @@ app.get('/api/users/:user', handler(users.get))
 
 app.delete('/api/users/:user', handler(users.delete_))
 
+app.put('/api/users/:user', handler(users.update))
+
 app.listen(PORT, console.log(`Listening on port ${PORT}`))
