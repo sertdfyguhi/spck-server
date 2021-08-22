@@ -16,12 +16,13 @@ function get(req, res, db) {
   }
 }
 
+// TODO: auth
 function delete_(req, res, db) {
   const name = req.params.pkg.split('-')[0]
   const ver = req.params.pkg.split('-')[1]
 
   if (name in db.get('packages')) {
-    const resp = delete_pkg(name, ver, db)
+    const resp = delete_pkg(name, db, ver)
     res.status(resp[1]).send(resp[0])
   } else {
     res.status(404).send({ message: 'Package not found.' })
@@ -36,13 +37,13 @@ function download(req, res, db) {
     const ver = req.params.pkg.split('-')[1] || versions[versions.length - 1]
 
     if (!versions.includes(ver)) {
-      res.status(404).send({ message: 'Version not found.' })
-      return
+      return res.status(404).send({ message: 'Version not found.' })
     }
 
     db.set(
       `packages/${name}/downloads`,
-      (db.get(`packages/${name}/downloads`) || 0) + 1)
+      (db.get(`packages/${name}/downloads`) || 0) + 1
+    )
 
     res.status(200).download(
       `${__dirname}/packages/${name}/${ver}.tar`, `${name}-${ver}.tar`
@@ -82,9 +83,10 @@ function publish(req, res, db) {
           downloads: (db.get(`packages/${name}/downloads`) || 0) };
 
       if (forbidden_pkg_names.includes(name)) {
-        res.status(403).send({ message: 'Package name is forbidden to use.' })
+        res.status(422).send({ message: 'Package name is forbidden to use.' })
       }
 
+      // TODO: refactor
       try {
         const user = sp(auth.get_user)(token, process.env.KEY).payload.user
         if (user in db.get('users')) {
@@ -98,7 +100,7 @@ function publish(req, res, db) {
       }
 
       if (!name.split('').every(c => allow_chars_usr.includes(c))) {
-        res.status(403).send({ message: 'Package name must only include the alphabet and _.' })
+        res.status(422).send({ message: 'Package name must only include the alphabet and _.' })
         return }
 
       if (Object.values(comb).some(val => val === undefined)) {
@@ -122,11 +124,16 @@ function publish(req, res, db) {
       }
 
       db.set(`packages/${name}`, comb)
+      db.set(
+        `users/${comb.author}/packages`,
+        (
+          db.get(`users/${comb.author}/packages`) || []
+        ).concat(name)
+      )
 
       const resp = make_tar(data, name, version)
       if (resp) {
-        res.status(400).send(resp)
-        return
+        return res.status(400).send(resp)
       }
 
       res.status(200).send({ message: 'Published successfully!' })
@@ -134,7 +141,7 @@ function publish(req, res, db) {
       res.status(409).send({ message: 'Package version already exists.' })
     }
   } else {
-    res.status(403).send({ message: 'You cannot update this package.' })
+    res.status(401).send({ message: 'You cannot update this package.' })
   }
 }
 

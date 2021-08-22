@@ -1,4 +1,5 @@
 const auth = require('../auth.js')
+const { delete_pkg } = require('../pkg.js')
 const allowed_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_'
 const allow_chars_usr = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_'
 
@@ -14,7 +15,6 @@ function get(req, res, db) {
   }
 }
 
-// TODO: do the thing where it deletes all the packages made by person
 function delete_(req, res, db) {
   const user = req.params.user
   const pass = req.body.pass
@@ -30,6 +30,9 @@ function delete_(req, res, db) {
   auth.check(pass, db.get(`users/${user}/pass`))
     .then(corr => {
       if (corr) {
+        (db.get(`users/${user}/packages`) || []).forEach(package => {
+          delete_pkg(package, db)
+        })
         db.delete(`users/${user}`)
         res.status(200).send({ message: 'User successfully deleted.' })
       } else {
@@ -52,11 +55,11 @@ function login(req, res, db) {
                 res.status(200).send({ message: 'Login successful.', token: jwt })
               })
           } else {
-            res.status(403).send({ message: 'Incorrect username or password.' })
+            res.status(401).send({ message: 'Incorrect username or password.' })
           }
         })
     } else {
-      res.status(403).send({ message: 'Incorrect username or password.' })
+      res.status(401).send({ message: 'Incorrect username or password.' })
     }
   } else {
     res.status(422).send({ message: 'User or password is not provided.' })
@@ -73,23 +76,23 @@ function register(req, res, db) {
     }
 
     if (user.length < 1 || user.length > 25) {
-      return res.status(403).send({
+      return res.status(422).send({
         message: 'Username must be at least 1 characters and at most 25 characters.'
       })
     }
     if (!user.split('').every(c => allow_chars_usr.includes(c))) {
-      return res.status(403).send({
+      return res.status(422).send({
         message: 'Username must only include the alphabet and _.'
       })
     }
 
     if (pass.length < 3 || pass.length > 30) {
-      return res.status(403).send({
+      return res.status(422).send({
         message: 'Password must be at least 3 characters and at most 30 characters.'
       })
     }
     if (!pass.split('').every(c => allowed_chars.includes(c))) {
-      return res.status(403).send({
+      return res.status(422).send({
         message: 'Password must only include the alphabet, digits and _.'
       })
     }

@@ -17,7 +17,7 @@ function make_tar(data, name, ver) {
   archive.finalize()
 }
 
-function delete_pkg(name, ver, db) {
+function delete_pkg(name, db, ver=null) {
   if (ver) {
     const path = `src/packages/${name}/${ver}.tar`
     if (fs.existsSync(path)) {

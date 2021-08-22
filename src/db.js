@@ -16,6 +16,7 @@ class Database {
       this._json = JSON.parse(json)
     } catch(e) {
       this._json = defaults
+      this._write()
     }
   }
 
