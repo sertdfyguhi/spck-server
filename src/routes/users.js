@@ -14,16 +14,28 @@ function get(req, res, db) {
   }
 }
 
-// WHAT THE FUCK
+// TODO: do the thing where it deletes all the packages made by person
 function delete_(req, res, db) {
   const user = req.params.user
+  const pass = req.body.pass
 
-  if (user in db.get('users')) {
-    db.delete(`users/${user}`)
-    res.status(200).send({ message: 'User successfully deleted.' })
-  } else {
-    res.status(404).send({ message: 'User not found.' })
+  if (!(user in db.get('users'))) {
+    return res.status(404).send({ message: 'User not found.' })
   }
+
+  if (!pass) {
+    return res.status(422).send({ message: 'Password not provided.' })
+  }
+
+  auth.check(pass, db.get(`users/${user}/pass`))
+    .then(corr => {
+      if (corr) {
+        db.delete(`users/${user}`)
+        res.status(200).send({ message: 'User successfully deleted.' })
+      } else {
+        res.status(401).send({ message: 'Incorrect password.' })
+      }
+    })
 }
 
 function login(req, res, db) {
