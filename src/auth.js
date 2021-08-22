@@ -15,11 +15,11 @@ function get_user(token, key) {
   return jwtVerify(token, createSecretKey(key))
 }
 
-function check(sent_pass, pass) {
+async function check(sent_pass, pass) {
   return bcrypt.compare(sent_pass, pass)
 }
 
-function hash(pass) {
+async function hash(pass) {
   return bcrypt.hash(pass, 13)
     .then(enc => {
       return enc

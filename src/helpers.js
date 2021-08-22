@@ -2,6 +2,11 @@ const ss = require('string-similarity')
 
 function search(q, db) {
   const packages = Object.keys(db.get('packages'))
+  // if no packages
+  if (packages.length == 0) {
+    return []
+  }
+
   const best_match = ss.findBestMatch(
     q || '', 
     packages
@@ -9,13 +14,17 @@ function search(q, db) {
 
   return best_match.ratings.sort((a, b) => {
     return a.rating + b.rating
-  }).filter(rating => rating.rating > 0.6)
+  })
+    .filter(rating => rating.rating > 0.6)
     .map(rating => {
       let resp = db.get(`packages/${rating.target}`)
-      return { name: resp.name, 
+      return {
+        name: resp.name, 
         desc: resp.desc,
         version: resp.versions[resp.versions.length - 1],
-        author: resp.author } })
+        author: resp.author
+      }
+    })
 }
 
 function stats(db) {
