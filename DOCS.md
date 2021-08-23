@@ -23,6 +23,21 @@ Gets package info.
 - versions: Versions available.  
 ***type***: `array`
 
+## DELETE `/api/package/<package>`
+Deletes a package.
+
+### Params
+- package: Package name.
+
+### Fields in body
+##### \* required
+- token*: Token of account.  
+***type***: `string`
+
+### Response
+- message: Response message.  
+***type***: `string`
+
 ## GET `/api/package/<package>/download`
 Downloads the package in a .tar file.
 
@@ -53,7 +68,7 @@ Publishes a new package.
 - homepage: Homepage.  
 ***type***: `string`
 
-- token: Token of account.  
+- token*: Token of account.  
 ***type***: `string`
 
 - data: JSON of the directory.   
@@ -106,11 +121,62 @@ Searches for packages.
 
 ### Response
 Array of similar packages.
+
 - name: Package name.  
 ***type***: `string`
+
 - desc: Description.  
 ***type***: `string`
+
 - version: Latest version.  
 ***type***: `string`
-- author: Author.
+
+- author: Author.  
+***type***: `string`
+
+## GET `/api/users/<user>`
+Gets a user's information.
+
+### Params
+- user: Username of user.
+
+### Response
+- id: ID of user.  
+***type***: `number`
+
+- packages: Packages of user.
+***type***: `array`
+
+## DELETE `/api/users/<user>`
+Deletes a user.
+
+### Params
+- user: Username.
+
+### Fields in body
+##### \* required
+- token*: Token of account.  
+***type***: `string`
+
+### Response
+- message: Response message.  
+***type***: `string`
+
+
+## PUT `/api/users/<user>`
+Changes password for a user.
+
+### Params
+- user: Username.
+
+### Fields in body
+##### \* required
+- old_pass*: Old password of account.  
+***type***: `string`
+
+- new_pass*: New password of account.  
+***type***: `string`
+
+### Response
+- message: Response message.  
 ***type***: `string`
