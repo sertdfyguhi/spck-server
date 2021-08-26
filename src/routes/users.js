@@ -80,7 +80,7 @@ function register(req, res, db) {
         message: 'Username must be at least 1 characters and at most 25 characters.'
       })
     }
-    if (!user.split('').every(c => allow_chars_usr.includes(c))) {
+    if (!/[a-zA-Z_]/.test(user)) {
       return res.status(422).send({
         message: 'Username must only include the alphabet and _.'
       })
@@ -91,7 +91,7 @@ function register(req, res, db) {
         message: 'Password must be at least 3 characters and at most 30 characters.'
       })
     }
-    if (!pass.split('').every(c => allowed_chars.includes(c))) {
+    if (!/[a-zA-Z0-9_]/.test(pass)) {
       return res.status(422).send({
         message: 'Password must only include the alphabet, digits and _.'
       })

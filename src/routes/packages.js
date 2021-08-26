@@ -1,9 +1,7 @@
 const fs = require('fs')
-const sp = require('synchronized-promise')
 const { make_tar, delete_pkg } = require('../pkg.js')
 const helpers = require('../helpers.js')
 const auth = require('../auth.js')
-const allow_chars_usr = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_'
 const forbidden_pkg_names = ['std', 'gamescene']
 
 function get(req, res, db) {
@@ -86,7 +84,7 @@ function publish(req, res, db) {
         res.status(422).send({ message: 'Package name is forbidden to use.' })
       }
 
-      if (!name.split('').every(c => allow_chars_usr.includes(c))) {
+      if (!/[a-zA-Z_]/.test(name)) {
         res.status(422).send({ message: 'Package name must only include the alphabet and _.' })
         return }
 
