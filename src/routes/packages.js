@@ -86,19 +86,6 @@ function publish(req, res, db) {
         res.status(422).send({ message: 'Package name is forbidden to use.' })
       }
 
-      // TODO: refactor
-      try {
-        const user = sp(auth.get_user)(token, process.env.KEY).payload.user
-        if (user in db.get('users')) {
-          comb['author'] = user
-        } else {
-          throw ''
-        }
-      } catch {
-        res.status(404).send({ message: 'Token is invalid.' })
-        return
-      }
-
       if (!name.split('').every(c => allow_chars_usr.includes(c))) {
         res.status(422).send({ message: 'Package name must only include the alphabet and _.' })
         return }
@@ -113,30 +100,40 @@ function publish(req, res, db) {
         return
       }
 
-      if (!fs.existsSync(`${__dirname}/../packages/${name}`))
-        fs.mkdirSync(`${__dirname}/../packages/${name}`)
+      auth.get_user(token, process.env.KEY)
+        .then(user => {
+          if (user in db.get('users')) {
+            comb['author'] = user
+      
+            if (!fs.existsSync(`${__dirname}/../packages/${name}`))
+              fs.mkdirSync(`${__dirname}/../packages/${name}`)
+      
+            if (
+              comb.author != (db.get(`packages/${name}/author`) || comb.author)
+            ) {
+              res.status(409).send({ message: 'Author cannot be changed.' })
+              return
+            }
+      
+            db.set(`packages/${name}`, comb)
+            db.set(
+              `users/${comb.author}/packages`,
+              (
+                db.get(`users/${comb.author}/packages`) || []
+              ).concat(name)
+            )
+      
+            const resp = make_tar(data, name, version)
+            if (resp) {
+              return res.status(400).send(resp)
+            }
+      
+            res.status(200).send({ message: 'Published successfully!' })
+          } else {
+            res.status(404).send({ message: 'Token is invalid.' })
+          }
+        })
 
-      if (
-        comb.author != (db.get(`packages/${name}/author`) || comb.author)
-      ) {
-        res.status(409).send({ message: 'Author cannot be changed.' })
-        return
-      }
-
-      db.set(`packages/${name}`, comb)
-      db.set(
-        `users/${comb.author}/packages`,
-        (
-          db.get(`users/${comb.author}/packages`) || []
-        ).concat(name)
-      )
-
-      const resp = make_tar(data, name, version)
-      if (resp) {
-        return res.status(400).send(resp)
-      }
-
-      res.status(200).send({ message: 'Published successfully!' })
     } else {
       res.status(409).send({ message: 'Package version already exists.' })
     }

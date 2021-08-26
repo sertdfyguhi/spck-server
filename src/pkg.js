@@ -7,6 +7,7 @@ function make_tar(data, name, ver) {
   const output = fs.createWriteStream(`src/packages/${name}/${ver}.tar`)
 
   archive.pipe(output)
+
   for (const fn in data) {
     if (typeof fn == 'string') {
       archive.append(data[fn], { name: fn })
@@ -14,6 +15,7 @@ function make_tar(data, name, ver) {
       return { message: 'Invalid data.' }
     }
   }
+
   archive.finalize()
 }
 
