@@ -1,7 +1,5 @@
 const auth = require('../auth.js')
 const { delete_pkg } = require('../pkg.js')
-const allowed_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_'
-const allow_chars_usr = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_'
 
 function get(req, res, db) {
   const user = req.params.user
@@ -48,8 +46,8 @@ function login(req, res, db) {
   if (user && pass) {
     if (user in db.get('users')) {
       auth.check(pass, db.get(`users/${user}/pass`))
-        .then(correct => {
-          if (correct) {
+        .then(corr => {
+          if (corr) {
             auth.create_token(user, process.env.KEY)
               .then(jwt => {
                 res.status(200).send({ message: 'Login successful.', token: jwt })
@@ -80,6 +78,7 @@ function register(req, res, db) {
         message: 'Username must be at least 1 characters and at most 25 characters.'
       })
     }
+
     if (!/[a-zA-Z_]/.test(user)) {
       return res.status(422).send({
         message: 'Username must only include the alphabet and _.'
@@ -91,20 +90,19 @@ function register(req, res, db) {
         message: 'Password must be at least 3 characters and at most 30 characters.'
       })
     }
+
     if (!/[a-zA-Z0-9_]/.test(pass)) {
       return res.status(422).send({
         message: 'Password must only include the alphabet, digits and _.'
       })
     }
 
-    let json = {
-      id: Object.keys(db.get('users')).length + 1
-    }
-    
     auth.hash(pass)
       .then(hash => {
-        json.pass = hash
-        db.set(`users/${user}`, json)
+        db.set(`users/${user}`, {
+          id: Object.keys(db.get('users')).length + 1,
+          pass: hash
+        })
       })
     
     auth.create_token(user, process.env.KEY)
@@ -137,7 +135,7 @@ function update(req, res, db) {
         }
       })
   } else {
-    return res.status(422).send({ message: 'Required arguments not provided.' })
+    res.status(422).send({ message: 'Required arguments not provided.' })
   }
 }
 
