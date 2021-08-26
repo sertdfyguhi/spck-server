@@ -15,7 +15,7 @@ const rate_limiter = new rate_limit({
   message: { message: 'You have been rate limited. Maximum 10 requests per day.' }
 })
 
-app.use('/api/publish', rate_limiter)
+app.use(['/api/publish', '/api/register'], rate_limiter)
 app.use(express.static('src/public'))
 app.use(express.json())
 app.use(cookie_parser())
@@ -44,6 +44,12 @@ app.get('/search', (req, res) => {
   res.render('search', {
     packages: helpers.search(q, db),
     query: q
+  })
+})
+
+app.get('/packages', (req, res) => {
+  res.render('packages', {
+    packages: Object.values(db.get('packages'))
   })
 })
 
