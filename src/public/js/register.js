@@ -32,3 +32,16 @@ function register() {
 }
 
 document.querySelector('button').onclick = register
+
+user.addEventListener('keydown', e => {
+  if (e.key == 'Enter') {
+    user.blur()
+    pass.focus()
+  }
+})
+
+pass.addEventListener('keydown', e => {
+  if (e.key == 'Enter') {
+    register()
+  }
+})
