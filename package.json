@@ -1,7 +1,7 @@
 {
   "name": "spck-server",
   "version": "1.0.0",
-  "description": "server for pckp",
+  "description": "server for spck",
   "main": "src/index.js",
   "scripts": {
     "start": "./start-server.sh",
@@ -14,9 +14,9 @@
   "author": "sertdfyguhi",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/sertdfyguhi/pckp-server/issues"
+    "url": "https://github.com/sertdfyguhi/spck-server/issues"
   },
-  "homepage": "https://github.com/sertdfyguhi/pckp-server#readme",
+  "homepage": "https://github.com/sertdfyguhi/spck-server#readme",
   "dependencies": {
     "aes256": "^1.1.0",
     "archiver": "^5.3.0",
