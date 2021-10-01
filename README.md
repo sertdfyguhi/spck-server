@@ -2,8 +2,8 @@
 Server for spck, a package manager for [SPWN](https://github.com/Spu7Nix/SPWN-language).  
 Currently in development.
 
-# Api docs
-Api docs is located in [DOCS.md](https://github.com/sertdfyguhi/spck-server/blob/master/DOCS.md).
+# API docs
+API docs is located in [DOCS.md](https://github.com/sertdfyguhi/spck-server/blob/master/DOCS.md).
 
 # Todo
 - [x] add dependencies for packages
