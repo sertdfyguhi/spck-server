@@ -8,6 +8,9 @@ Gets package info.
 - package: Package name.
 
 ### Response
+- id: ID of package.  
+***type***: `number`
+
 - name: Package name.  
 ***type***: `string`
 
@@ -22,6 +25,9 @@ Gets package info.
 
 - versions: Versions available.  
 ***type***: `array`
+
+- downloads: Package downloads.  
+***type***: `number`
 
 ## DELETE `/api/package/<package>`
 Deletes a package.
@@ -59,20 +65,22 @@ Publishes a new package.
 ***type***: `string`
 
 - long_desc: Long description.  
-***type***: `string`
+***type***: `string`  
+***default***: `''`
 
 - version*: Version number.  
 ***type***: `string`  
 **example**: `1.0.0`
 
 - homepage: Homepage.  
-***type***: `string`
+***type***: `string`  
+***default***: `null`
 
 - token*: Token of account.  
 ***type***: `string`
 
-- data: JSON of the directory.   
-***type***: `string`
+- data*: JSON of the directory.   
+***type***: `json`
 
 ### Response
 - message: Response message.  
