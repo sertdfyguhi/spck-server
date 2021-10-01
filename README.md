@@ -1,7 +1,8 @@
 # spck-server
 Server for spck, a package manager for [SPWN](https://github.com/Spu7Nix/SPWN-language).  
-Currently in development.
-Discord server: https://discord.gg/VN7dvg52hN
+Currently in development.  
+URL for latest commit with no packages: https://spck-server.sertdfyguhi.repl.co/  
+Discord server: https://discord.gg/VN7dvg52hN  
 
 # API docs
 API docs is located in [DOCS.md](https://github.com/sertdfyguhi/spck-server/blob/master/DOCS.md).
