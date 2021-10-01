@@ -35,18 +35,14 @@ app.get('/', (req, res) => {
   res.render('index', { stats: helpers.stats(db) })
 })
 
-app.get('/navbar', (req, res) => {
-  res.render('navbar', { login: 'token' in (req.cookies || {}) })
-})
-
 app.get('/packages/:package', (req, res) => {
   const package = req.params.package
-  const data = db.get(`packages/${package}`)
+  const data = db.get(`packages/${package}`) || 0
 
   res.render('package', {
     pkg: data || package,
-    desc: JSON.stringify((data || {}).long_desc || '').slice(1, -1),
-    homepage: JSON.stringify((data || {}).homepage || '').slice(1, -1)
+    desc: JSON.stringify(data.long_desc || '').slice(1, -1),
+    homepage: JSON.stringify(data.homepage || '').slice(1, -1)
   })
 })
 
