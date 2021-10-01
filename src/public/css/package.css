@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300&family=IBM+Plex+Mono:wght@300&display=swap');
+
+pre code {
+  background: #383838;
+  padding: 12px;
+  border-radius: 6px;
+  font-family: 'Fira Code', monospace;
+  font-size: 12px;
+  display: inline-block;
+}
+
+code {
+  background: #383838;
+  border-radius: 6px;
+  font-family: 'Fira Code', monospace;
+  font-size: 12px;
+  padding: 3px;
+}
+
+.container {
+  width: 80%;
+  text-align: left;
+}
+
+.name {
+  margin-bottom: 0%;
+  margin-left: 10px;
+}
+
+.desc {
+  width: 55em;
+  margin-top: 1em;
+  margin-left: 30px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.desc img {
+  max-height: 100%;
+  max-width: 100%;
+}
+
+.info-list {
+  position: absolute;
+  left: 68em;
+  top: 119px;
+  list-style-type: none;
+}
+
+.info-list li a {
+  color: white;
+}
+
+.info {
+  font-family: 'IBM Plex Mono', monospace;
+}

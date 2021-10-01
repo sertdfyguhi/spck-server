@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof pkg == 'string' ? pkg : pkg.name %> - spck</title>
+  <link rel="stylesheet"
+      href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/base16/zenburn.min.css">
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/navbar.css">
+  <link rel="stylesheet" href="/css/package.css">
+</head>
+<body>
+  <div id="navbar"></div>
+
+  <% if (typeof pkg != 'string') { %>
+    <div class="center">
+      <div class="container">
+        <h1 class="name"><%= pkg.name %></h1>
+        <hr>
+        <div id="desc" class="desc"></div>
+        <ul class="info-list">
+          <li>
+            <h3>Latest Version</h3>
+            <p class="info"><%= pkg.versions[pkg.versions.length - 1] %></p>
+          </li>
+
+          <% if (pkg.homepage) { %>
+            <hr>
+            <li>
+              <h3>Homepage</h3>
+              <a class="info" href="<%= homepage %>"><%= pkg.homepage %></a>
+            </li>
+          <% } %>
+
+          <hr>
+          <li>
+            <h3>Downloads</h3>
+            <p class="info"><%= pkg.downloads %></p>
+          </li>
+          <hr>
+          <li>
+            <h3>Author</h3>
+            <a class="info" href="/users/<%= pkg.author %>"><%= pkg.author %></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  <% } else { %>
+    <h1 style="color: rgb(255, 73, 73);">404 Not Found</h1>
+  <% } %> 
+
+  <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/marked/lib/marked.min.js"></script>
+  <script src="/js/navbar.js"></script>
+  <script>
+    const OPTIONS = {
+      highlight: (code, lang) => {
+        return hljs.highlight(code, {
+          language: hljs.getLanguage(lang) ? lang : 'plaintext'
+        }).value
+      },
+      langPrefix: 'language-',
+      gfm: true
+    }
+
+    document.getElementById('desc').innerHTML = DOMPurify.sanitize(
+      marked("<%- desc || pkg.desc %>", OPTIONS)
+    )
+  </script>
+</body>
+</html>

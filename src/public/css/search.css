@@ -1,9 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@1,200&family=Ubuntu+Mono&display=swap');
 
-body {
-  background-color: rgb(35, 35, 35);
-}
-
 hr {
   background-color: gray;
   border: none;

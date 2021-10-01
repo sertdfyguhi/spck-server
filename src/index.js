@@ -39,17 +39,22 @@ app.get('/navbar', (req, res) => {
   res.render('navbar', { login: 'token' in (req.cookies || {}) })
 })
 
+app.get('/packages/:package', (req, res) => {
+  const package = req.params.package
+  const data = db.get(`packages/${package}`)
+
+  res.render('package', {
+    pkg: data || package,
+    desc: JSON.stringify((data || {}).long_desc || '').slice(1, -1),
+    homepage: JSON.stringify((data || {}).homepage || '').slice(1, -1)
+  })
+})
+
 app.get('/search', (req, res) => {
   const q = typeof req.query.q == 'string' ? req.query.q : req.query.q[0]
   res.render('search', {
     packages: helpers.search(q, db),
     query: q
-  })
-})
-
-app.get('/packages', (req, res) => {
-  res.render('packages', {
-    packages: Object.values(db.get('packages'))
   })
 })
 
