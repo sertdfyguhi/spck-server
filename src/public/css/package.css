@@ -39,6 +39,14 @@ code {
   max-width: 100%;
 }
 
+.desc a {
+  color: rgb(59, 59, 255);
+}
+
+.desc a:visited {
+  color: rgb(143, 0, 238);
+}
+
 .info-list {
   position: absolute;
   left: 68em;
