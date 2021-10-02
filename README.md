@@ -1,3 +1,5 @@
+![logo](https://github.com/sertdfyguhi/spck-server/blob/4947cdacfb17c9d430b6fbe544a2972bc0693194/5130F60D-63C2-42E1-97F5-14F1950F754C.png)
+
 # spck-server
 Server for spck, a package manager for [SPWN](https://github.com/Spu7Nix/SPWN-language).  
 Currently in development.  
