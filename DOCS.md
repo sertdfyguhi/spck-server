@@ -152,6 +152,9 @@ Gets a user's information.
 - id: ID of user.  
 ***type***: `number`
 
+- name: Name of user.  
+***type***: `string`
+
 - packages: Packages of user.
 ***type***: `array`
 
