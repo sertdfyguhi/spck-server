@@ -28,7 +28,7 @@ code {
 }
 
 .desc {
-  width: 55em;
+  width: 65em;
   margin-top: 1em;
   margin-left: 30px;
   font-family: 'IBM Plex Mono', monospace;
@@ -49,7 +49,7 @@ code {
 
 .info-list {
   position: absolute;
-  left: 68em;
+  left: 78em;
   top: 119px;
   list-style-type: none;
 }
