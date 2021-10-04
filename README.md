@@ -1,4 +1,4 @@
-![logo](https://github.com/sertdfyguhi/spck-server/blob/master/spck-long.png)
+![logo](https://raw.githubusercontent.com/sertdfyguhi/spck-server/master/spck-long.png)
 
 # spck-server
 Server for spck, a package manager for [SPWN](https://github.com/Spu7Nix/SPWN-language).  
