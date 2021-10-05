@@ -12,6 +12,9 @@ so one day i thought of the idea of creating a package manager for spwn then som
 # API docs
 API docs is located in [DOCS.md](https://github.com/sertdfyguhi/spck-server/blob/master/DOCS.md).
 
+# Name
+**SP**wn **P**ac**K**age
+
 # Todo
 - Frontend
   - [ ] Create a page for users
