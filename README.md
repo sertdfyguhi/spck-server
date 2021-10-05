@@ -13,11 +13,18 @@ so one day i thought of the idea of creating a package manager for spwn then som
 API docs is located in [DOCS.md](https://github.com/sertdfyguhi/spck-server/blob/master/DOCS.md).
 
 # Todo
-- [x] add dependencies for packages
-- [x] add rate limiting system
-- [ ] change database to use something other than txt file (probably sql)
-- [ ] make a frontend
-- [ ] buy a domain and use it to host the api and frontend
-- [x] way to delete accounts and packages
-- [x] api docs
-- [x] add accounts
+- Frontend
+  - [ ] Create a page for users
+  - [ ] Add an account management page
+  - [ ] Adding emails to account (maybe)
+  - [ ] Profile picture for accounts (maybe)
+  - [ ] Search for users
+  - [ ] Report system for users and packages
+
+- Backend
+  - [x] Add dependencies for packages
+  - [x] Add rate limiting system
+  - [ ] Change the database (most likely to be mongoDB)
+  - [ ] Buy a domain and use it to host the website
+  - [x] Delete accounts and packages
+  - [ ] Update more account info and package info
