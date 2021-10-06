@@ -1,30 +1,26 @@
 const { readFileSync, writeFileSync } = require('fs')
-const { encrypt, decrypt } = require('aes256')
 
 class Database {
-  constructor(path, enc = false, key = null, defaults = {}) {
-    let json = readFileSync(path).toString()
-    try {
-      if (enc) json = decrypt(key, json)
-    } catch {}
-
+  constructor(path, defaults = {}) {
     this._path = path
-    this._enc = enc
-    this._key = key
 
     try {
-      this._json = JSON.parse(json)
+      this._json = JSON.parse(
+        readFileSync(path).toString()
+      )
     } catch(e) {
       this._json = defaults
-      this._write()
     }
+
+    process.on('SIGINT', () => this._write(this._json))
   }
 
   _write() {
-    let data = JSON.stringify(this._json)
-
-    if (this._enc) data = encrypt(this._key, data)
-    writeFileSync(this._path, data)
+    writeFileSync(
+      this._path,
+      JSON.stringify(this._json)
+    )
+    process.exit(130)
   }
 
   set(key, value) {
@@ -41,7 +37,6 @@ class Database {
     } else {
       this._json[key] = value
     }
-    this._write()
   }
 
   get(key) {
@@ -72,12 +67,10 @@ class Database {
     } else {
       delete this._json[key]
     }
-    this._write()
   }
 
   clear() {
     this._json = {}
-    this._write()
   }
 
   log() {

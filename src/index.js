@@ -7,7 +7,7 @@ const packages = require('./routes/packages.js')
 const users = require('./routes/users.js')
 
 const app = express()
-const db = new Database('src/db.txt', true, process.env.KEY, { packages: {}, users: {} })
+const db = new Database('src/db.json', { packages: {}, users: {} })
 const PORT = 5000
 const rate_limiter = new rate_limit({
   windowMs: 60000 * 60 * 24,
@@ -40,9 +40,7 @@ app.get('/packages/:package', (req, res) => {
   const data = db.get(`packages/${package}`) || 0
 
   res.render('package', {
-    pkg: data || package,
-    desc: JSON.stringify(data.long_desc || '').slice(1, -1),
-    homepage: JSON.stringify(data.homepage || '').slice(1, -1)
+    pkg: data || package
   })
 })
 

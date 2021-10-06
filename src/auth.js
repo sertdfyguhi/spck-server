@@ -1,6 +1,7 @@
 const { SignJWT } = require('jose/jwt/sign')
 const { jwtVerify } = require('jose/jwt/verify')
 const { createSecretKey } = require('crypto')
+const { encrypt, decrypt } = require('aes256')
 const bcrypt = require('bcrypt')
 
 function create_token(user, key) {
@@ -21,11 +22,11 @@ async function get_user(token, key) {
 }
 
 async function check(sent_pass, pass) {
-  return await bcrypt.compare(sent_pass, pass)
+  return await bcrypt.compare(sent_pass, decrypt(process.env.KEY, pass))
 }
 
 async function hash(pass) {
-  return await bcrypt.hash(pass, 13)
+  return encrypt(process.env.KEY, await bcrypt.hash(pass, 13))
 }
 
 module.exports = {

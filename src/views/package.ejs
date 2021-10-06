@@ -30,7 +30,9 @@
             <hr>
             <li>
               <h3>Homepage</h3>
-              <a class="info" href="<%= homepage %>"><%= pkg.homepage %></a>
+              <a class="info" href="<%= JSON.stringify(pkg.homepage).slice(1, -1) %>">
+                <%= pkg.homepage %>
+              </a>
             </li>
           <% } %>
 
@@ -67,7 +69,7 @@
     }
 
     document.getElementById('desc').innerHTML = DOMPurify.sanitize(
-      marked("<%- desc || pkg.desc %>", OPTIONS)
+      marked(<%- JSON.stringify(pkg.long_desc) %>, OPTIONS) || <%- JSON.stringify(pkg.desc) %>
     )
   </script>
 </body>

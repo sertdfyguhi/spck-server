@@ -116,9 +116,7 @@ function publish(req, res, db) {
             db.set(`packages/${name}`, comb)
             db.set(
               `users/${comb.author}/packages`,
-              (
-                db.get(`users/${comb.author}/packages`) || []
-              ).concat(name)
+              db.get(`users/${comb.author}/packages`).concat(name)
             )
       
             const resp = make_tar(data, name, version)

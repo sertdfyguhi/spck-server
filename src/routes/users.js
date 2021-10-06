@@ -101,7 +101,9 @@ function register(req, res, db) {
       .then(hash => {
         db.set(`users/${user}`, {
           id: Object.keys(db.get('users')).length + 1,
-          pass: hash
+          pass: hash,
+          name: user,
+          packages: []
         })
       })
     
