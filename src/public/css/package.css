@@ -18,7 +18,7 @@ code {
 }
 
 .container {
-  width: 80%;
+  width: 91%;
   text-align: left;
 }
 
@@ -51,6 +51,7 @@ code {
   position: absolute;
   left: 78em;
   top: 119px;
+  max-width: 17%;
   list-style-type: none;
 }
 

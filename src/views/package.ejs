@@ -18,7 +18,7 @@
     <div class="center">
       <div class="container">
         <h1 class="name"><%= pkg.name %></h1>
-        <hr>
+        <hr style="width: 100%;">
         <div id="desc" class="desc"></div>
         <ul class="info-list">
           <li>
@@ -69,7 +69,8 @@
     }
 
     document.getElementById('desc').innerHTML = DOMPurify.sanitize(
-      marked(<%- JSON.stringify(pkg.long_desc) %>, OPTIONS) || <%- JSON.stringify(pkg.desc) %>
+      // yeah imma fixed this later
+      marked("<%- JSON.stringify(pkg.long_desc).slice(1, -1) %>", OPTIONS) || "<%- JSON.stringify(pkg.desc).slice(1, -1) %>"
     )
   </script>
 </body>
