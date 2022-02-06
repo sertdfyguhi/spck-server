@@ -1,5 +1,7 @@
 ![logo](https://raw.githubusercontent.com/sertdfyguhi/spck-server/master/spck-long.png)
 
+# lets say this project flopped its done now
+
 # spck-server
 Server for spck, a package manager for [SPWN](https://github.com/Spu7Nix/SPWN-language).  
 Currently in development.  
